@@ -1,0 +1,278 @@
+#nav-group {
+    max-width: 1400px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+
+@media screen and (min-width: 1400px) {
+    #nav {
+        padding: 0 calc((100% - 1400px + 2rem) / 2);
+    }
+}
+
+@media screen and (max-width: 1400px) {
+    #nav {
+        padding: 0 1rem;
+    }
+}
+
+
+
+/* 菜单 */
+
+#blog-info {
+    display: flex; /* 使内部项目横向排布 */
+    overflow: visible !important; /* 溢出部分可见，不遮挡弹出菜单 */
+    z-index: 102; /* 指定一个z-index值，使其位于.mask-name-container上方 */
+}
+
+/* 抽屉按钮调整 */
+#blog-info .back-home-button {
+    width: 45px; /* 增大按钮尺寸 */
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    margin-right: 10px;
+    border-radius: 15px;
+    position: relative; /* 子绝父相 */
+}
+#blog-info .back-home-button .back-home-button-icon {
+    line-height: 45px; /* 调整行高匹配按钮高度 */
+    font-size: 22px; /* 增大图标字体 */
+}
+#page-header.not-top-img #nav .back-home-button {
+    color: var(--font-color);
+}
+
+#blog-info .back-home-button .back-menu-list-groups {
+    position: absolute;
+    left: 0;
+    top: 45px;
+    font-size: 12px;
+    opacity: 0;
+    transform: scale(.8);
+    transform-origin: top left;
+    transition: 0.1s;
+    color: #999;
+    background-color: var(--card-bg);
+    box-shadow: var(--card-box-shadow);
+    border-radius: 12px;
+    pointer-events: none; /* 阻止鼠标事件 */
+}
+
+#blog-info .back-home-button:hover .back-menu-list-groups {
+    opacity: 1; /* 显示时的透明度 */
+    transform: scale(1); /* 缩放动画效果结束帧 */
+    transition: 0.3s;
+    top: 55px;
+    pointer-events: auto; /* 恢复鼠标事件 */
+}
+
+/* 填充按钮和抽屉交界空白部分，使hover连续 */
+#blog-info .back-home-button .back-menu-list-groups::before {
+    position: absolute;
+    top: -25px;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    content: "";
+}
+
+/* 修改group主轴为垂直方向 */
+#blog-info .back-home-button .back-menu-list-group {
+    display: flex;
+    flex-direction: column;
+}
+
+#blog-info .back-home-button .back-menu-list-group .back-menu-list-title {
+    margin: 8px 0 0 16px;
+    font-size: 16px; /* 增大抽屉菜单标题字体 */
+    font-weight: 600;
+}
+
+#blog-info .back-home-button .back-menu-list-group .back-menu-list {
+    display: flex;
+    width: 340px; /* 限制列表盒子宽度 */
+    flex-wrap: wrap; /* 超出宽度换行 */
+    flex-direction: row; /* 项目水平排列 */
+    justify-content: space-between; /* 项目之间留间距 */
+}
+
+#blog-info .back-home-button .back-menu-list-groups .back-menu-list-group:last-child .back-menu-list {
+    margin: 0 0 8px;
+}
+
+#blog-info .back-menu-list a:hover {
+    background: var(--text-bg-hover);
+}
+
+#blog-info .back-home-button .back-menu-list .back-menu-item {
+    display: flex;
+    width: 150px; /* 限制列表项目盒子宽度 */
+    margin: 4px 8px;
+    padding: 4px 8px !important;
+    border-radius: 8px !important;
+    align-items: center; /* 使内部元素垂直居中 */
+}
+
+#blog-info .back-menu-list-groups .back-menu-list .back-menu-item .back-menu-item-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    background: white;
+}
+
+#blog-info .back-menu-list-groups .back-menu-list .back-menu-item .back-menu-item-text {
+    font-size: 16px; /* 增大抽屉菜单项文字大小 */
+    color: var(--font-color);
+    margin-left: .5rem;
+    white-space: nowrap;
+}
+
+#blog-info .back-home-button .back-menu-list a:hover .back-menu-item-text {
+    color: white;
+}
+
+#blog-info #blog-info-main {
+    padding: 0 2px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s;
+    border-radius: 50px;
+}
+
+#blog-info #blog-info-main .site-name {
+    font-size: 22px; /* 增大站点标题字体 */
+    font-weight: 600;
+}
+
+#blog-info #blog-info-main i {
+    position: absolute;
+    color: white;
+    transition: .3s;
+    font-size: 1rem;
+    opacity: 0;
+}
+
+/* hover后主页图标显示 */
+#blog-info #blog-info-main:hover i {
+    opacity: 1;
+}
+
+/* hover后站点标题文本透明化隐藏 */
+#blog-info #blog-info-main:hover .site-name {
+    opacity: 0;
+}
+
+/* 抽屉按钮和站点标题hover背景调整 */
+
+/* 默认hover效果 */
+#blog-info #blog-info-main:hover,
+#blog-info .back-home-button:hover {
+    color: white !important;
+    background: var(--btn-bg);
+    transition: .3s;
+}
+
+/* 首页有头图时默认半透明hover背景 */
+.full_page:not(.nav-fixed) #nav #blog-info #blog-info-main:hover,
+.full_page:not(.nav-fixed) #nav #blog-info .back-home-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* 文章页有头图时默认半透明hover背景 */
+.post-bg:not(.nav-fixed) #nav #blog-info #blog-info-main:hover,
+.post-bg:not(.nav-fixed) #nav #blog-info .back-home-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* 使用inherit关键字取消#blog-info的hover效果 */
+#page-header.nav-fixed #nav #blog-info:hover {
+    color: inherit !important;
+}
+
+/* 将#blog-info-main默认的inline定位改为flex定位 */
+#page-header.nav-fixed #nav #blog-info > a:last-child {
+    display: flex
+}
+
+
+
+
+/* 右侧搜索 */
+#nav-right {
+    display: flex; /* 项目默认继承display: block，改为flex项目 */
+    flex: 1;  /* 与span#blog-info保持一致，确保导航栏左右比例相同 */
+    justify-content: flex-end; /* 项目靠右排布 */
+    align-items: center;
+    z-index: 102;
+}
+/* 右边按钮调整 */
+#nav-right .site-page {
+    display: block;
+    text-align: center;
+    height: 45px; /* 增大按钮高度 */
+    width: 45px; /* 增大按钮宽度 */
+    border-radius: 50px;
+    line-height: 45px; /* 调整行高匹配按钮高度 */
+    font-size: 20px !important; /* 增大图标字体 */
+}
+/* 左侧图标调整 */
+#blog-info .back-home-button-icon {
+    line-height: 45px; /* 保持与上方设置一致 */
+    font-size: 20px !important; /* 保持与上方设置一致 */
+}
+/* 清除nav-right下划线hover效果 */
+#nav-right .site-page:hover:after {
+    width: 0 !important;
+}
+
+/* hover效果调整，与上一步左边抽屉菜单一致 */
+#nav-right .site-page:hover {
+    color: white !important;
+    background: var(--btn-bg);
+    transition: .3s;
+}
+/* 首页有头图时默认半透明hover背景 */
+.full_page:not(.nav-fixed) #nav-right .site-page:hover {
+    background: rgba(255,255,255,0.2);
+}
+/* 文章页有头图时默认半透明hover背景 */
+.post-bg:not(.nav-fixed) #nav-right .site-page:hover {
+    background: rgba(255,255,255,0.2);
+}
+/* 中间菜单样式和尺寸 */
+#nav .menus_items {
+    font-weight: bold;
+    font-size: 18px; /* 增大选项卡字体 */
+}
+
+#nav .menus_items .menus_item {
+    padding: 0 5px;
+}
+
+#nav .menus_items .menus_item a.site-page {
+    padding: 10px 15px; /* 增大选项卡内边距 */
+    font-size: 20px; /* 确保选项卡字体大小 */
+    border-radius: 25px;
+}
+/* 移动端隐藏菜单栏 */
+#nav.hide-menu .menus_items {
+    display: none !important;
+}
+
+
+
+/* 二级菜单横向排布 */
+.menus_item_child li:not(#sidebar-menus li){
+    float: left;
+}
+/* 居中显示 */
+.menus_item_child:not(#sidebar-menus ul){
+  left:50%;
+  translate:-50%;
+}

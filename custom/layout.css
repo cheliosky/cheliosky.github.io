@@ -1,0 +1,58 @@
+.layout {
+    max-width: 1400px;
+}
+
+@media screen and (min-width: 900px) {
+    .layout>div:first-child {
+        width: 77%;
+    }
+    
+    #aside-content {
+        width: 23%;
+    }
+    
+}
+
+
+
+.layout.hide-aside {
+    max-width: 1200px;
+}
+
+
+
+.article-sort {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.article-sort-item.year {
+    width: 100%;
+}
+
+.article-sort-item {
+    padding: .5rem;
+    margin: .3rem 0;
+    border-radius: var(--border-radius);
+}
+
+.article-sort-item:not(.year) {
+    width: 100%;
+    box-shadow: var(--card-box-shadow);
+}
+
+@media screen and (min-width: 901px) {
+    .article-sort-item:not(.year) {
+        width: calc(50% - 0.25rem);
+        box-shadow: var(--card-box-shadow);
+    }
+}
+
+.article-sort-item:not(.year):before {
+    content: unset;
+}
+
+.article-sort-item:before {
+    left: calc(-20px - 7px);
+}
