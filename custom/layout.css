@@ -58,10 +58,11 @@
 }
 
 /* 作者信息卡片背景 */
-.card-widget.card-info {
-    background: 
-        linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(30, 58, 138, 0.9) 100%),
+#aside-content .card-widget.card-info.text-center {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.342) 0%, rgb(255, 255, 255) 100%),
         url('/img/authorbg.jpg');
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
 }
