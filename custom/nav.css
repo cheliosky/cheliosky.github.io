@@ -1,29 +1,31 @@
 #nav-group {
-    max-width: 1400px;
+    max-width: 1300px;
     width: 100%;
     display: flex;
     align-items: center;
 }
 
 
+
+@media screen and (min-width: 1300px) {
+    #nav {
+        padding: 0 calc((100% - 1300px + 2rem) / 2);
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    #nav {
+        padding: 0 3rem;
+    }
+}
+
+
+
+
 #nav {
     opacity: 0.95;
     transition: none; /* 禁用所有过渡效果 */
 }
-
-@media screen and (min-width: 1400px) {
-    #nav {
-        padding: 0 calc((100% - 1400px + 2rem) / 2);
-    }
-}
-
-@media screen and (max-width: 1400px) {
-    #nav {
-        padding: 0 1rem;
-    }
-}
-
-
 
 /* 菜单 */
 
