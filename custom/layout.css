@@ -56,3 +56,12 @@
 .article-sort-item:before {
     left: calc(-20px - 7px);
 }
+
+/* 作者信息卡片背景 */
+.card-widget.card-info {
+    background: 
+        linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(30, 58, 138, 0.9) 100%),
+        url('/img/authorbg.jpg');
+    background-size: cover;
+    background-position: center;
+}
