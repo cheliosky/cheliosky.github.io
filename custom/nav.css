@@ -257,13 +257,48 @@
 }
 
 #nav .menus_items .menus_item {
+    margin: 0 2px;
     padding: 0 15px;
+    transition: .1s; /* 为hover效果添加过渡 */
+    border-radius: 5px; /* 预设圆角，避免hover时闪烁 */
 }
 
 #nav .menus_items .menus_item a.site-page {
     font-size: 1.3rem; /* 确保选项卡字体大小 */
-    border-radius: 25px;
     letter-spacing: 5px; /* 增大字符间距 */
+    transition: .1s; /* 和site-name相同的过渡设置 */
+    position: relative; /* 为伪元素定位 */
+    padding: 0 0 0 5px;
+}
+
+/* 直接覆盖默认的选项卡hover效果 */
+#nav .menus_items .menus_item a.site-page::after {
+    display: none !important; /* 移除默认的下划线效果 */
+}
+
+/* 将hover效果设置在菜单项容器上 */
+#nav .menus_items .menus_item:hover {
+    background: var(--btn-bg); /* 使用和site-name相同的背景色 */
+    border-radius: 10px; /* 和选项卡文字相同的圆角 */
+    transition: .1s; /* 和site-name相同的过渡时间 */
+}
+
+#nav .menus_items .menus_item:hover a.site-page {
+    color: white !important; /* hover时文字变白 */
+}
+
+/* 首页有头图时使用半透明背景（和site-name保持一致） */
+.full_page:not(.nav-fixed) #nav .menus_items .menus_item:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* 文章页有头图时使用半透明背景（和site-name保持一致） */
+.post-bg:not(.nav-fixed) #nav .menus_items .menus_item:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+#nav .menus_items .menus_item a.site-page:hover::after {
+    display: none !important; /* 确保hover时也不显示下划线 */
 }
 /* 移动端隐藏菜单栏 */
 #nav.hide-menu .menus_items {
