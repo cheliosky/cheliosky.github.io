@@ -6,6 +6,11 @@
 }
 
 
+#nav {
+    opacity: 0.95;
+    transition: none; /* 禁用所有过渡效果 */
+}
+
 @media screen and (min-width: 1400px) {
     #nav {
         padding: 0 calc((100% - 1400px + 2rem) / 2);
@@ -63,9 +68,8 @@
 }
 
 #blog-info .back-home-button:hover .back-menu-list-groups {
-    opacity: 1; /* 显示时的透明度 */
+    opacity: 0.95; /* 显示时的透明度 */
     transform: scale(1); /* 缩放动画效果结束帧 */
-    transition: 0.3s;
     top: 55px;
     pointer-events: auto; /* 恢复鼠标事件 */
 }
@@ -141,19 +145,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: .3s;
+    transition: .1s;
     border-radius: 50px;
 }
 
 #blog-info #blog-info-main .site-name {
     font-size: 22px; /* 增大站点标题字体 */
-    font-weight: 600;
+    font-weight: 700; /* Bold 字重 */
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
 }
 
 #blog-info #blog-info-main i {
     position: absolute;
     color: white;
-    transition: .3s;
+    transition: .1s;
     font-size: 1rem;
     opacity: 0;
 }
@@ -175,7 +180,7 @@
 #blog-info .back-home-button:hover {
     color: white !important;
     background: var(--btn-bg);
-    transition: .3s;
+    transition: .1s;
 }
 
 /* 首页有头图时默认半透明hover背景 */
@@ -235,7 +240,7 @@
 #nav-right .site-page:hover {
     color: white !important;
     background: var(--btn-bg);
-    transition: .3s;
+    transition: .1s;
 }
 /* 首页有头图时默认半透明hover背景 */
 .full_page:not(.nav-fixed) #nav-right .site-page:hover {
@@ -247,24 +252,30 @@
 }
 /* 中间菜单样式和尺寸 */
 #nav .menus_items {
-    font-weight: bold;
+    font-weight: 700;
     font-size: 18px; /* 增大选项卡字体 */
 }
 
 #nav .menus_items .menus_item {
-    padding: 0 5px;
+    padding: 0 15px;
 }
 
 #nav .menus_items .menus_item a.site-page {
-    padding: 10px 15px; /* 增大选项卡内边距 */
-    font-size: 20px; /* 确保选项卡字体大小 */
+    font-size: 1.3rem; /* 确保选项卡字体大小 */
     border-radius: 25px;
+    letter-spacing: 5px; /* 增大字符间距 */
 }
 /* 移动端隐藏菜单栏 */
 #nav.hide-menu .menus_items {
     display: none !important;
 }
 
+#nav .site-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+}
 
 
 /* 二级菜单横向排布 */
@@ -275,4 +286,16 @@
 .menus_item_child:not(#sidebar-menus ul){
   left:50%;
   translate:-50%;
+}
+
+/* 导航栏阴影控制 */
+/* 页面在顶部时：无阴影 */
+#page-header:not(.nav-fixed) #nav {
+    box-shadow: none;
+    border-bottom: none;
+}
+
+/* 页面滚动时：显示阴影 */
+#page-header.nav-fixed #nav {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
