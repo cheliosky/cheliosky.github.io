@@ -1,0 +1,8 @@
+#recent-posts .recent-post-item .post_cover {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* #recent-posts .recent-post-item .post_cover img.post-bg {
+  border-radius: 12px;
+} */

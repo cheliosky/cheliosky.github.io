@@ -1,6 +1,6 @@
 /* 网格背景样式 - 仅设置背景，不影响布局 */
 body {
-    background-color: white;
+    /* background-color: white; */
     background-image: 
         linear-gradient(to right, #e4e2e2 1px, transparent 1px),
         linear-gradient(to bottom, #e4e2e2 1px, transparent 1px);
