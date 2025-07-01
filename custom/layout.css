@@ -66,3 +66,13 @@
     background-repeat: no-repeat;
     overflow: hidden;
 }
+
+/* 深色模式下的作者信息卡片背景 */
+[data-theme='dark'] #aside-content .card-widget.card-info.text-center {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.342) 0%, rgb(0, 0, 0) 100%),
+        url('/img/authorbg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}

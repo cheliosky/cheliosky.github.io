@@ -2,8 +2,8 @@
 body {
     /* background-color: white; */
     background-image: 
-        linear-gradient(to right, #e4e2e2 1px, transparent 1px),
-        linear-gradient(to bottom, #e4e2e2 1px, transparent 1px);
+        linear-gradient(to right, #c5c5c53b 1px, transparent 1px),
+        linear-gradient(to bottom, #c5c5c53b 1px, transparent 1px);
     background-size: 2.5vw 2.5vw;
     background-attachment: scroll; /* 固定背景，滚动时不移动 */
 } 
