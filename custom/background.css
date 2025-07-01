@@ -1,9 +1,16 @@
 /* 网格背景样式 - 仅设置背景，不影响布局 */
 body {
-    /* background-color: white; */
+    background-color: white;
     background-image: 
         linear-gradient(to right, #c5c5c53b 1px, transparent 1px),
         linear-gradient(to bottom, #c5c5c53b 1px, transparent 1px);
     background-size: 2.5vw 2.5vw;
     background-attachment: scroll; /* 固定背景，滚动时不移动 */
 } 
+
+[data-theme='dark'] body {
+    background-color: #2c2c2c;
+    background-image: 
+        linear-gradient(to right, #6464641f 1px, transparent 1px),
+        linear-gradient(to bottom, #6464641f 1px, transparent 1px);
+}
