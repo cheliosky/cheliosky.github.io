@@ -76,3 +76,8 @@
     background-repeat: no-repeat;
     overflow: hidden;
 }
+
+/* 隐藏归档页面年份标题 */
+.article-sort-item.year {
+    display: none;
+}
