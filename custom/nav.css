@@ -1,3 +1,4 @@
+/* 导航栏容器和响应式布局 */
 #nav-group {
     max-width: 1300px;
     width: 100%;
@@ -5,55 +6,134 @@
     align-items: center;
 }
 
-
-
 @media screen and (min-width: 1300px) {
-    #nav {
+    #page-header #nav {
         padding: 0 calc((100% - 1300px + 2rem) / 2);
     }
 }
 
 @media screen and (max-width: 1300px) {
-    #nav {
+    #page-header #nav {
         padding: 0 1rem;
     }
 }
 
-
-
-
-#nav {
+/* 导航栏基础设置 */
+#page-header #nav {
     opacity: 0.95;
-    transition: none; /* 禁用所有过渡效果 */
+    transition: none;
 }
 
-/* 菜单 */
-
-#blog-info {
-    display: flex; /* 使内部项目横向排布 */
-    overflow: visible !important; /* 溢出部分可见，不遮挡弹出菜单 */
-    z-index: 102; /* 指定一个z-index值，使其位于.mask-name-container上方 */
+/* 导航栏阴影控制 */
+#page-header:not(.nav-fixed) #nav {
+    box-shadow: none;
+    border-bottom: none;
 }
 
-/* 抽屉按钮调整 */
-#blog-info .back-home-button {
-    width: 45px; /* 增大按钮尺寸 */
+#page-header.nav-fixed #nav {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 左侧博客信息区域 */
+#page-header #nav #blog-info {
+    display: flex;
+    overflow: visible;
+    z-index: 102;
+}
+
+/* 按钮通用样式 */
+#page-header #nav #blog-info .back-home-button,
+#page-header #nav #nav-right .site-page {
+    width: 45px;
     height: 45px;
     display: flex;
     justify-content: center;
-    margin-right: 10px;
-    border-radius: 15px;
-    position: relative; /* 子绝父相 */
-}
-#blog-info .back-home-button .back-home-button-icon {
-    line-height: 45px; /* 调整行高匹配按钮高度 */
-    font-size: 22px; /* 增大图标字体 */
-}
-#page-header.not-top-img #nav .back-home-button {
-    color: var(--font-color);
+    align-items: center;
+    border-radius: 50px;
+    transition: .1s;
 }
 
-#blog-info .back-home-button .back-menu-list-groups {
+#page-header #nav #blog-info .back-home-button {
+    margin-right: 10px;
+    border-radius: 15px;
+    position: relative;
+}
+
+/* 图标字体统一设置 */
+#page-header #nav #blog-info .back-home-button .back-home-button-icon,
+#page-header #nav #blog-info .back-home-button-icon,
+#page-header #nav #nav-right .site-page {
+    font-size: 20px;
+    line-height: 45px;
+}
+
+#page-header #nav #blog-info .back-home-button .back-home-button-icon {
+    font-size: 22px;
+}
+
+/* 站点标题样式 */
+#page-header #nav #blog-info #blog-info-main {
+    padding: 0 2px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .1s;
+    border-radius: 50px;
+}
+
+#page-header #nav #blog-info #blog-info-main .site-name,
+#page-header #nav .site-name {
+    font-size: 22px;
+    font-weight: 700;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+}
+
+#page-header #nav .site-name {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+/* 主页图标效果 */
+#page-header #nav #blog-info #blog-info-main i {
+    position: absolute;
+    color: white;
+    transition: .1s;
+    font-size: 1rem;
+    opacity: 0;
+}
+
+#page-header #nav #blog-info #blog-info-main:hover i {
+    opacity: 1;
+}
+
+#page-header #nav #blog-info #blog-info-main:hover .site-name {
+    opacity: 0;
+}
+
+/* 通用hover效果 */
+#page-header #nav #blog-info #blog-info-main:hover,
+#page-header #nav #blog-info .back-home-button:hover,
+#page-header #nav #nav-right .site-page:hover {
+    color: white;
+    background: var(--btn-bg);
+    transition: .1s;
+}
+
+/* 有头图时的半透明背景 */
+#page-header.full_page:not(.nav-fixed) #nav #blog-info #blog-info-main:hover,
+#page-header.full_page:not(.nav-fixed) #nav #blog-info .back-home-button:hover,
+#page-header.full_page:not(.nav-fixed) #nav #nav-right .site-page:hover,
+#page-header.full_page:not(.nav-fixed) #nav .menus_items .menus_item:hover,
+#page-header.post-bg:not(.nav-fixed) #nav #blog-info #blog-info-main:hover,
+#page-header.post-bg:not(.nav-fixed) #nav #blog-info .back-home-button:hover,
+#page-header.post-bg:not(.nav-fixed) #nav #nav-right .site-page:hover,
+#page-header.post-bg:not(.nav-fixed) #nav .menus_items .menus_item:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* 抽屉菜单样式 */
+#page-header #nav #blog-info .back-home-button .back-menu-list-groups {
     position: absolute;
     left: 0;
     top: 45px;
@@ -66,18 +146,17 @@
     background-color: var(--card-bg);
     box-shadow: var(--card-box-shadow);
     border-radius: 12px;
-    pointer-events: none; /* 阻止鼠标事件 */
+    pointer-events: none;
 }
 
-#blog-info .back-home-button:hover .back-menu-list-groups {
-    opacity: 0.95; /* 显示时的透明度 */
-    transform: scale(1); /* 缩放动画效果结束帧 */
+#page-header #nav #blog-info .back-home-button:hover .back-menu-list-groups {
+    opacity: 0.95;
+    transform: scale(1);
     top: 55px;
-    pointer-events: auto; /* 恢复鼠标事件 */
+    pointer-events: auto;
 }
 
-/* 填充按钮和抽屉交界空白部分，使hover连续 */
-#blog-info .back-home-button .back-menu-list-groups::before {
+#page-header #nav #blog-info .back-home-button .back-menu-list-groups::before {
     position: absolute;
     top: -25px;
     left: 0;
@@ -86,253 +165,143 @@
     content: "";
 }
 
-/* 修改group主轴为垂直方向 */
-#blog-info .back-home-button .back-menu-list-group {
+/* 抽屉菜单内容 */
+#page-header #nav #blog-info .back-home-button .back-menu-list-group {
     display: flex;
     flex-direction: column;
 }
 
-#blog-info .back-home-button .back-menu-list-group .back-menu-list-title {
+#page-header #nav #blog-info .back-home-button .back-menu-list-group .back-menu-list-title {
     margin: 8px 0 0 16px;
-    font-size: 16px; /* 增大抽屉菜单标题字体 */
+    font-size: 16px;
     font-weight: 600;
 }
 
-#blog-info .back-home-button .back-menu-list-group .back-menu-list {
+#page-header #nav #blog-info .back-home-button .back-menu-list-group .back-menu-list {
     display: flex;
-    width: 340px; /* 限制列表盒子宽度 */
-    flex-wrap: wrap; /* 超出宽度换行 */
-    flex-direction: row; /* 项目水平排列 */
-    justify-content: space-between; /* 项目之间留间距 */
+    width: 340px;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
-#blog-info .back-home-button .back-menu-list-groups .back-menu-list-group:last-child .back-menu-list {
+#page-header #nav #blog-info .back-home-button .back-menu-list-groups .back-menu-list-group:last-child .back-menu-list {
     margin: 0 0 8px;
 }
 
-#blog-info .back-menu-list a:hover {
-    background: var(--text-bg-hover);
-}
-
-#blog-info .back-home-button .back-menu-list .back-menu-item {
+/* 抽屉菜单项 */
+#page-header #nav #blog-info .back-home-button .back-menu-list .back-menu-item {
     display: flex;
-    width: 150px; /* 限制列表项目盒子宽度 */
+    width: 150px;
     margin: 4px 8px;
-    padding: 4px 8px !important;
-    border-radius: 8px !important;
-    align-items: center; /* 使内部元素垂直居中 */
+    padding: 4px 8px;
+    border-radius: 8px;
+    align-items: center;
 }
 
-#blog-info .back-menu-list-groups .back-menu-list .back-menu-item .back-menu-item-icon {
+#page-header #nav #blog-info .back-menu-list-groups .back-menu-list .back-menu-item .back-menu-item-icon {
     width: 24px;
     height: 24px;
     border-radius: 24px;
     background: white;
 }
 
-#blog-info .back-menu-list-groups .back-menu-list .back-menu-item .back-menu-item-text {
-    font-size: 16px; /* 增大抽屉菜单项文字大小 */
+#page-header #nav #blog-info .back-menu-list-groups .back-menu-list .back-menu-item .back-menu-item-text {
+    font-size: 16px;
     color: var(--font-color);
     margin-left: .5rem;
     white-space: nowrap;
 }
 
-#blog-info .back-home-button .back-menu-list a:hover .back-menu-item-text {
+#page-header #nav #blog-info .back-menu-list a:hover {
+    background: var(--text-bg-hover);
+}
+
+#page-header #nav #blog-info .back-home-button .back-menu-list a:hover .back-menu-item-text {
     color: white;
 }
 
-#blog-info #blog-info-main {
-    padding: 0 2px;
-    position: relative;
+/* 右侧搜索区域 */
+#page-header #nav #nav-right {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: .1s;
-    border-radius: 50px;
-}
-
-#blog-info #blog-info-main .site-name {
-    font-size: 22px; /* 增大站点标题字体 */
-    font-weight: 700; /* Bold 字重 */
-    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-}
-
-#blog-info #blog-info-main i {
-    position: absolute;
-    color: white;
-    transition: .1s;
-    font-size: 1rem;
-    opacity: 0;
-}
-
-/* hover后主页图标显示 */
-#blog-info #blog-info-main:hover i {
-    opacity: 1;
-}
-
-/* hover后站点标题文本透明化隐藏 */
-#blog-info #blog-info-main:hover .site-name {
-    opacity: 0;
-}
-
-/* 抽屉按钮和站点标题hover背景调整 */
-
-/* 默认hover效果 */
-#blog-info #blog-info-main:hover,
-#blog-info .back-home-button:hover {
-    color: white !important;
-    background: var(--btn-bg);
-    transition: .1s;
-}
-
-/* 首页有头图时默认半透明hover背景 */
-.full_page:not(.nav-fixed) #nav #blog-info #blog-info-main:hover,
-.full_page:not(.nav-fixed) #nav #blog-info .back-home-button:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-/* 文章页有头图时默认半透明hover背景 */
-.post-bg:not(.nav-fixed) #nav #blog-info #blog-info-main:hover,
-.post-bg:not(.nav-fixed) #nav #blog-info .back-home-button:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-/* 使用inherit关键字取消#blog-info的hover效果 */
-#page-header.nav-fixed #nav #blog-info:hover {
-    color: inherit !important;
-}
-
-/* 将#blog-info-main默认的inline定位改为flex定位 */
-#page-header.nav-fixed #nav #blog-info > a:last-child {
-    display: flex
-}
-
-
-
-
-/* 右侧搜索 */
-#nav-right {
-    display: flex; /* 项目默认继承display: block，改为flex项目 */
-    flex: 1;  /* 与span#blog-info保持一致，确保导航栏左右比例相同 */
-    justify-content: flex-end; /* 项目靠右排布 */
+    flex: 1;
+    justify-content: flex-end;
     align-items: center;
     z-index: 102;
 }
-/* 右边按钮调整 */
-#nav-right .site-page {
+
+#page-header #nav #nav-right .site-page {
     display: block;
     text-align: center;
-    height: 45px; /* 增大按钮高度 */
-    width: 45px; /* 增大按钮宽度 */
-    border-radius: 50px;
-    line-height: 45px; /* 调整行高匹配按钮高度 */
-    font-size: 20px !important; /* 增大图标字体 */
-}
-/* 左侧图标调整 */
-#blog-info .back-home-button-icon {
-    line-height: 45px; /* 保持与上方设置一致 */
-    font-size: 20px !important; /* 保持与上方设置一致 */
-}
-/* 清除nav-right下划线hover效果 */
-#nav-right .site-page:hover:after {
-    width: 0 !important;
 }
 
-/* hover效果调整，与上一步左边抽屉菜单一致 */
-#nav-right .site-page:hover {
-    color: white !important;
-    background: var(--btn-bg);
-    transition: .1s;
+/* 清除右侧按钮下划线效果 */
+#page-header #nav #nav-right .site-page:hover:after {
+    width: 0;
 }
-/* 首页有头图时默认半透明hover背景 */
-.full_page:not(.nav-fixed) #nav-right .site-page:hover {
-    background: rgba(255,255,255,0.2);
-}
-/* 文章页有头图时默认半透明hover背景 */
-.post-bg:not(.nav-fixed) #nav-right .site-page:hover {
-    background: rgba(255,255,255,0.2);
-}
-/* 中间菜单样式和尺寸 */
-#nav .menus_items {
+
+/* 中间菜单样式 */
+#page-header #nav .menus_items {
     font-weight: 700;
-    font-size: 18px; /* 增大选项卡字体 */
+    font-size: 18px;
 }
 
-#nav .menus_items .menus_item {
+#page-header #nav .menus_items .menus_item {
     margin: 0 2px;
     padding: 0 15px;
-    transition: .1s; /* 为hover效果添加过渡 */
-    border-radius: 5px; /* 预设圆角，避免hover时闪烁 */
+    transition: .1s;
+    border-radius: 5px;
 }
 
-#nav .menus_items .menus_item a.site-page {
-    font-size: 1.3rem; /* 确保选项卡字体大小 */
-    letter-spacing: 5px; /* 增大字符间距 */
-    transition: .1s; /* 和site-name相同的过渡设置 */
-    position: relative; /* 为伪元素定位 */
+#page-header #nav .menus_items .menus_item a.site-page {
+    font-size: 1.3rem;
+    letter-spacing: 5px;
+    transition: .1s;
+    position: relative;
     padding: 0 0 0 5px;
 }
 
-/* 直接覆盖默认的选项卡hover效果 */
-#nav .menus_items .menus_item a.site-page::after {
-    display: none !important; /* 移除默认的下划线效果 */
+/* 菜单项hover效果 */
+#page-header #nav .menus_items .menus_item:hover {
+    background: var(--btn-bg);
+    border-radius: 10px;
+    transition: .1s;
 }
 
-/* 将hover效果设置在菜单项容器上 */
-#nav .menus_items .menus_item:hover {
-    background: var(--btn-bg); /* 使用和site-name相同的背景色 */
-    border-radius: 10px; /* 和选项卡文字相同的圆角 */
-    transition: .1s; /* 和site-name相同的过渡时间 */
+#page-header #nav .menus_items .menus_item:hover a.site-page {
+    color: white;
 }
 
-#nav .menus_items .menus_item:hover a.site-page {
-    color: white !important; /* hover时文字变白 */
+/* 移除菜单项下划线 */
+#page-header #nav .menus_items .menus_item a.site-page::after,
+#page-header #nav .menus_items .menus_item a.site-page:hover::after {
+    display: none;
 }
 
-/* 首页有头图时使用半透明背景（和site-name保持一致） */
-.full_page:not(.nav-fixed) #nav .menus_items .menus_item:hover {
-    background: rgba(255, 255, 255, 0.2);
+/* 移动端设置 */
+#page-header #nav.hide-menu .menus_items {
+    display: none;
 }
-
-/* 文章页有头图时使用半透明背景（和site-name保持一致） */
-.post-bg:not(.nav-fixed) #nav .menus_items .menus_item:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-#nav .menus_items .menus_item a.site-page:hover::after {
-    display: none !important; /* 确保hover时也不显示下划线 */
-}
-/* 移动端隐藏菜单栏 */
-#nav.hide-menu .menus_items {
-    display: none !important;
-}
-
-#nav .site-name {
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1;
-    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-}
-
 
 /* 二级菜单横向排布 */
-.menus_item_child li:not(#sidebar-menus li){
+.menus_item_child li:not(#sidebar-menus li) {
     float: left;
 }
-/* 居中显示 */
-.menus_item_child:not(#sidebar-menus ul){
-  left:50%;
-  translate:-50%;
+
+.menus_item_child:not(#sidebar-menus ul) {
+    left: 50%;
+    translate: -50%;
 }
 
-/* 导航栏阴影控制 */
-/* 页面在顶部时：无阴影 */
-#page-header:not(.nav-fixed) #nav {
-    box-shadow: none;
-    border-bottom: none;
+/* 特殊状态修正 */
+#page-header.not-top-img #nav .back-home-button {
+    color: var(--font-color);
 }
 
-/* 页面滚动时：显示阴影 */
-#page-header.nav-fixed #nav {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+#page-header.nav-fixed #nav #blog-info:hover {
+    color: inherit;
+}
+
+#page-header.nav-fixed #nav #blog-info > a:last-child {
+    display: flex;
 }

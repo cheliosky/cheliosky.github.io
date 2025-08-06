@@ -1,0 +1,122 @@
+/* 页脚与头图透明 */
+body #footer,
+body #page-header {
+    background: transparent;
+}
+
+body #footer::before,
+body #page-header::before,
+[data-theme="dark"] body #footer::before,
+[data-theme="dark"] body #page-header::before {
+    background: transparent;
+}
+
+/* 白天模式样式修正 */
+#nav #blog-info,
+#nav a,
+#nav span.site-page,
+#site-title,
+#footer-wrap,
+#footer-wrap a {
+    color: #333;
+}
+
+#site-subtitle,
+#post-info #post-meta {
+    color: #666;
+}
+
+#post-info .post-title {
+    color: #333;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* 白天模式hover效果 */
+#nav a:hover,
+#nav span.site-page:hover,
+#footer-wrap a:hover {
+    color: #1e3a8a;
+}
+
+/* 去除白天模式文字阴影 */
+#nav .site-name,
+#nav .site-page,
+#nav #blog-info .site-name,
+#page-header #site-info #site-title,
+#page-header #site-info #site-subtitle {
+    text-shadow: none;
+}
+
+/* 白天模式菜单下拉框 */
+#nav .menus_item_child {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid #e0e0e0;
+}
+
+#nav .menus_item_child a {
+    color: #333;
+    text-shadow: none;
+}
+
+#nav .menus_item_child li:hover {
+    background-color: #f0f0f0;
+}
+
+#nav .menus_item_child li:hover a {
+    color: #333;
+}
+
+/* 深色模式覆盖样式 */
+[data-theme="dark"] #nav #blog-info,
+[data-theme="dark"] #nav a,
+[data-theme="dark"] #nav span.site-page,
+[data-theme="dark"] #site-subtitle,
+[data-theme="dark"] #post-info #post-meta,
+[data-theme="dark"] #footer-wrap,
+[data-theme="dark"] #footer-wrap a {
+    color: var(--light-grey);
+}
+
+[data-theme="dark"] #nav a:hover,
+[data-theme="dark"] #nav span.site-page:hover,
+[data-theme="dark"] #site-title,
+[data-theme="dark"] #post-info .post-title {
+    color: var(--white);
+}
+
+/* 深色模式文字阴影恢复 */
+[data-theme="dark"] #nav .site-name,
+[data-theme="dark"] #nav #blog-info .site-name,
+[data-theme="dark"] #page-header #site-info #site-title,
+[data-theme="dark"] #page-header #site-info #site-subtitle {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, .15);
+}
+
+[data-theme="dark"] #nav .site-page {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .3);
+}
+
+[data-theme="dark"] #post-info .post-title {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, .15);
+}
+
+/* 深色模式菜单下拉框恢复 */
+[data-theme="dark"] #nav .menus_item_child {
+    background-color: var(--sidebar-bg);
+    backdrop-filter: none;
+    border: none;
+}
+
+[data-theme="dark"] #nav .menus_item_child a {
+    color: var(--font-color);
+    text-shadow: none;
+}
+
+[data-theme="dark"] #nav .menus_item_child li:hover {
+    background: var(--text-bg-hover);
+}
+
+[data-theme="dark"] #nav .menus_item_child li:hover a {
+    color: var(--font-color);
+}
