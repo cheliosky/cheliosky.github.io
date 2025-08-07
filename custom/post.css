@@ -1,14 +1,14 @@
 /* 页脚与头图透明 */
-body #footer,
-body #page-header {
-    background: transparent;
+#footer,
+#page-header {
+    background: transparent !important;
 }
 
-body #footer::before,
-body #page-header::before,
-[data-theme="dark"] body #footer::before,
-[data-theme="dark"] body #page-header::before {
-    background: transparent;
+#footer::before,
+#page-header::before,
+[data-theme="dark"] #footer::before,
+[data-theme="dark"] #page-header::before {
+    background: transparent !important;
 }
 
 /* 白天模式样式修正 */
