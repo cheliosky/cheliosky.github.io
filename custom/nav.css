@@ -132,7 +132,7 @@
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* 抽屉菜单样式 */
+/* 抽屉菜单样式 - 提高背景不透明度 */
 #page-header #nav #blog-info .back-home-button .back-menu-list-groups {
     position: absolute;
     left: 0;
@@ -143,14 +143,21 @@
     transform-origin: top left;
     transition: 0.1s;
     color: #999;
-    background-color: var(--card-bg);
+    background-color: rgba(255, 255, 255, 0.95); /* 提高不透明度到95% */
+    backdrop-filter: blur(10px); /* 添加背景模糊效果 */
     box-shadow: var(--card-box-shadow);
     border-radius: 12px;
     pointer-events: none;
 }
 
+/* 暗色模式下的抽屉菜单背景 */
+[data-theme='dark'] #page-header #nav #blog-info .back-home-button .back-menu-list-groups {
+    background-color: rgba(18, 18, 18, 0.95); /* 暗色模式：95%不透明度 */
+    backdrop-filter: blur(10px);
+}
+
 #page-header #nav #blog-info .back-home-button:hover .back-menu-list-groups {
-    opacity: 0.95;
+    opacity: 1;
     transform: scale(1);
     top: 55px;
     pointer-events: auto;

@@ -107,10 +107,10 @@
   }
   
   .site-card-group .site-card:hover {
-    border-color: var(--anzhiyu-main) !important;
-    background-color: var(--anzhiyu-main) !important;
-    -webkit-box-shadow: var(--anzhiyu-shadow-theme) !important;
-    box-shadow: var(--anzhiyu-shadow-theme) !important;
+    border-color: var(--zzh-main) !important;
+    background-color: var(--zzh-main) !important;
+    -webkit-box-shadow: var(--zzh-shadow-theme) !important;
+    box-shadow: var(--zzh-shadow-theme) !important;
   }
   .site-card-group > a:hover .wrapper img {
     -webkit-transform: scale(1.2);

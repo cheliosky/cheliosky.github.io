@@ -1,9 +1,25 @@
+/* Hello About页面CSS变量定义 */
+:root {
+    --zzh-card-bg: var(--card-bg);
+    --style-border-always: 1px solid rgba(0, 0, 0, 0.1);
+    --zzh-shadow-border: 0 3px 8px 6px rgba(7, 17, 27, .08);
+    --zzh-white: #fff;
+}
+
+/* 暗色模式变量 */
+[data-theme='dark'] {
+    --zzh-card-bg: var(--card-bg);
+    --style-border-always: 1px solid rgba(255, 255, 255, 0.1);
+    --zzh-shadow-border: 0 3px 8px 6px rgba(0, 0, 0, .3);
+    --zzh-white: rgba(255, 255, 255, 0.9);
+}
+
 .hello-about {
     margin: 20px auto;
     border-radius: 24px;
-    background: var(--anzhiyu-card-bg);
+    background: var(--zzh-card-bg);
     border: var(--style-border-always);
-    box-shadow: var(--anzhiyu-shadow-border);
+    box-shadow: var(--zzh-shadow-border);
     position: relative;
     overflow: hidden;
     user-select: none;
@@ -60,7 +76,7 @@
     background: transparent;
   }
   [data-theme="dark"] .hello-about h1 {
-    color: var(--anzhiyu-white);
+    color: var(--zzh-white);
   }
   
   .hello-about h1 {

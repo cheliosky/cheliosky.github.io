@@ -35,7 +35,7 @@
 #nav a:hover,
 #nav span.site-page:hover,
 #footer-wrap a:hover {
-    color: #1e3a8a;
+    color: #425AEF; /* 更新为新的主题色 */
 }
 
 /* 去除白天模式文字阴影 */
@@ -47,10 +47,10 @@
     text-shadow: none;
 }
 
-/* 白天模式菜单下拉框 */
+/* 白天模式菜单下拉框 - 提高背景不透明度 */
 #nav .menus_item_child {
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.98) !important; /* 提高到98%不透明度 */
+    backdrop-filter: blur(15px); /* 增强背景模糊效果 */
     border: 1px solid #e0e0e0;
 }
 
@@ -101,11 +101,11 @@
     text-shadow: 2px 2px 4px rgba(0, 0, 0, .15);
 }
 
-/* 深色模式菜单下拉框恢复 */
+/* 深色模式菜单下拉框 - 提高背景不透明度 */
 [data-theme="dark"] #nav .menus_item_child {
-    background-color: var(--sidebar-bg);
-    backdrop-filter: none;
-    border: none;
+    background-color: rgba(18, 18, 18, 0.98) !important; /* 提高到98%不透明度 */
+    backdrop-filter: blur(15px); /* 增强背景模糊效果 */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* 添加细边框 */
 }
 
 [data-theme="dark"] #nav .menus_item_child a {

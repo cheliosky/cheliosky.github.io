@@ -1,9 +1,66 @@
-#gitcalendar {
+/* About页面CSS变量定义 - 修复缺失的变量 */
+:root {
+    /* 卡片相关变量 */
+    --zzh-card-bg: var(--card-bg);
+    --zzh-background: var(--global-bg);
+    --zzh-white: #fff;
+    --zzh-black: #000;
+    --zzh-gray: #858585;
+    --zzh-secondtext: #a3a3a3;
+    --zzh-main: var(--btn-bg);
+    --zzh-theme: var(--btn-bg);
+    
+    /* 边框和阴影变量 */
+    --style-border-always: 1px solid rgba(0, 0, 0, 0.1);
+    --zzh-shadow-border: 0 3px 8px 6px rgba(7, 17, 27, .08);
+    --zzh-maskbg: rgba(255, 255, 255, 0.9);
+    
+    /* 颜色变量 */
+    --zzh-yellow: #ffc107;
+}
+
+/* 关键动画定义 */
+@keyframes gradient {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes coverIn {
+    0% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 暗色模式下的变量覆盖 */
+[data-theme='dark'] {
+    --zzh-card-bg: var(--card-bg);
+    --zzh-background: var(--global-bg);
+    --zzh-white: rgba(255, 255, 255, 0.9);
+    --zzh-black: #000;
+    --zzh-gray: #858585;
+    --zzh-secondtext: #a3a3a3;
+    --zzh-main: var(--btn-bg);
+    --zzh-theme: var(--btn-bg);
+    
+    /* 暗色模式的边框和阴影 */
+    --style-border-always: 1px solid rgba(255, 255, 255, 0.1);
+    --zzh-shadow-border: 0 3px 8px 6px rgba(0, 0, 0, .3);
+    --zzh-maskbg: rgba(18, 18, 18, 0.9);
+}
+
+  #gitcalendar {
     margin: 0 auto;
     border-radius: 24px;
-    background: var(--anzhiyu-card-bg);
+    background: var(--zzh-card-bg);
     border: var(--style-border-always);
-    box-shadow: var(--anzhiyu-shadow-border);
+    box-shadow: var(--zzh-shadow-border);
     position: relative;
     padding: 1rem 2rem;
     overflow: hidden;
@@ -29,7 +86,7 @@
   }
   
   #web_bg ~ .page:has(#about-page) {
-    background: var(--anzhiyu-background);
+    background: var(--zzh-background);
   }
   
   #about-page .author-box {
@@ -55,7 +112,7 @@
     background: #6bdf8f;
     position: absolute;
     border-radius: 50%;
-    border: 6px solid var(--anzhiyu-background);
+    border: 6px solid var(--zzh-background);
     top: 50%;
     left: 50%;
     transform: translate(35px, 45px);
@@ -73,7 +130,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    color: var(--anzhiyu-white);
+    color: var(--zzh-white);
     background: linear-gradient(120deg, #5b27ff 0, #00d4ff 100%);
     background-size: 200%;
     animation: gradient 15s ease infinite;
@@ -83,9 +140,9 @@
   .author-content-item {
     width: 49%;
     border-radius: 24px;
-    background: var(--anzhiyu-card-bg);
+    background: var(--zzh-card-bg);
     border: var(--style-border-always);
-    box-shadow: var(--anzhiyu-shadow-border);
+    box-shadow: var(--zzh-shadow-border);
     position: relative;
     padding: 1rem 2rem;
     overflow: hidden;
@@ -178,7 +235,7 @@
     width: 39%;
     background: url(https://img02.anheyu.com/adminuploads/1/2022/09/23/632d634f8376d.jpg) no-repeat top;
     background-size: cover;
-    color: var(--anzhiyu-white);
+    color: var(--zzh-white);
     overflow: hidden;
   }
   #about-page .about-statistic::after {
@@ -214,7 +271,7 @@
     font-size: 16px;
     border-radius: 15px;
     width: 100%;
-    color: var(--anzhiyu-white);
+    color: var(--zzh-white);
     display: flex;
     justify-content: space-between;
     flex-direction: row;
@@ -241,14 +298,14 @@
   }
   
   .post-tips {
-    color: var(--anzhiyu-gray);
+    color: var(--zzh-gray);
     font-size: 14px;
     position: absolute;
     bottom: 1rem;
     left: 2rem;
   }
   .post-tips a {
-    color: var(--anzhiyu-gray) !important;
+    color: var(--zzh-gray) !important;
     border: none !important;
   }
   .author-content-item .card-content .banner-button-group {
@@ -261,7 +318,7 @@
     width: 124px;
     border-radius: 20px;
     justify-content: center;
-    background: var(--anzhiyu-card-bg);
+    background: var(--zzh-card-bg);
     color: var(--font-color);
     display: flex;
     align-items: center;
@@ -279,8 +336,8 @@
   }
   
   .author-content-item .card-content .banner-button-group .banner-button:hover {
-    background: var(--anzhiyu-main);
-    color: var(--anzhiyu-white);
+    background: var(--zzh-main);
+    color: var(--zzh-white);
     border-radius: 20px !important;
   }
   .author-content-item.personalities {
@@ -359,7 +416,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    background: var(--anzhiyu-maskbg);
+    background: var(--zzh-maskbg);
     padding: 0.5rem 2rem;
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -415,12 +472,12 @@
   }
   
   .post-tips a:hover {
-    color: var(--anzhiyu-main) !important;
+    color: var(--zzh-main) !important;
     background: none !important;
   }
   
   .author-content-item.single.reward .reward-list-updateDate {
-    color: var(--anzhiyu-gray);
+    color: var(--zzh-gray);
     font-size: 14px;
   }
   
@@ -620,7 +677,7 @@
     flex-direction: column;
     justify-content: center;
     background: linear-gradient(120deg, #ff27e8 0, #ff8000 100%);
-    color: var(--anzhiyu-white);
+    color: var(--zzh-white);
     background-size: 200%;
     animation: gradient 15s ease infinite;
     min-height: 200px;
@@ -650,7 +707,7 @@
     background-size: cover;
     min-height: 300px;
     overflow: hidden;
-    color: var(--anzhiyu-white);
+    color: var(--zzh-white);
     width: 59%;
   }
   
@@ -705,14 +762,14 @@
     background: url(https://img02.anheyu.com/adminuploads/1/2022/09/24/632f0dd8f33c6.webp) no-repeat;
     background-size: cover;
     min-height: 230px;
-    color: var(--anzhiyu-white);
+    color: var(--zzh-white);
   }
   
   .author-content-item.like-music {
     background: url(https://p2.music.126.net/Mrg1i7DwcwjWBvQPIMt_Mg==/79164837213438.jpg) no-repeat top;
     background-size: cover;
     min-height: 400px;
-    color: var(--anzhiyu-white);
+    color: var(--zzh-white);
     overflow: hidden;
   }
   
@@ -737,7 +794,7 @@
       display: none;
     }
     [data-theme="dark"] .author-content-item .card-content .banner-button-group .banner-button {
-      color: var(--anzhiyu-black) !important;
+      color: var(--zzh-black) !important;
     }
     .author-content-item .card-content .banner-button-group .banner-button:hover {
       background: none !important;
@@ -787,7 +844,7 @@
       /* border-radius: 0; */
       padding: 0 1rem !important;
       box-shadow: none !important;
-      background: var(--anzhiyu-background);
+      background: var(--zzh-background);
     }
     .author-content-item .card-content .banner-button-group .banner-button-text {
       display: none;
@@ -809,8 +866,8 @@
       margin-left: 80px;
     }
     .author-content-item .card-content .banner-button-group .banner-button:hover i {
-      background: var(--anzhiyu-background) !important;
-      color: var(--anzhiyu-theme);
+      background: var(--zzh-background) !important;
+      color: var(--zzh-theme);
     }
     #selfInfo-content-year {
       width: 90px;
@@ -841,7 +898,7 @@
     border: var(--style-border-always);
     width: calc((100% / 3) - 0.5rem);
     margin: 0 0.25rem 0.5rem 0.25rem;
-    box-shadow: var(--anzhiyu-shadow-border);
+    box-shadow: var(--zzh-shadow-border);
   }
   
   .reward-list-item .reward-list-item-name {
@@ -870,6 +927,6 @@
   
   .reward-list-item .reward-list-item-time {
     font-size: 12px;
-    color: var(--anzhiyu-secondtext);
+    color: var(--zzh-secondtext);
     white-space: nowrap;
   }
