@@ -2,6 +2,7 @@
 #footer,
 #page-header {
     background: transparent !important;
+    text-align: center;
 }
 
 #footer::before,
