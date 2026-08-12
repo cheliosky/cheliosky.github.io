@@ -1,0 +1,310 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>浏览器的 User-Agent 到底是什么？一篇讲透用户代理 | HELIOSKY</title><meta name="author" content="Sunky-zhou"><meta name="copyright" content="Sunky-zhou"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="在上一篇讲 H5 唤端的文章里，我们多次用到”通过 UA 判断是否在微信环境”这样的判断。这个 UA，就是 User-Agent（用户代理）。它是前端识别运行环境、做兼容适配、埋点统计乃至风控反爬的基石。但它同时也是 Web 历史上最”混乱”的一个字段——充满了历史包袱、伪装与妥协。这篇文章把 User-Agent 从概念、结构、历史到现代演进和实战用法一次讲透。 一、User-Agent 是什么">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浏览器的 User-Agent 到底是什么？一篇讲透用户代理">
+<meta property="og:url" content="https://sunky-zhou.cn/2026/08/13/user-agent/index.html">
+<meta property="og:site_name" content="HELIOSKY">
+<meta property="og:description" content="在上一篇讲 H5 唤端的文章里，我们多次用到”通过 UA 判断是否在微信环境”这样的判断。这个 UA，就是 User-Agent（用户代理）。它是前端识别运行环境、做兼容适配、埋点统计乃至风控反爬的基石。但它同时也是 Web 历史上最”混乱”的一个字段——充满了历史包袱、伪装与妥协。这篇文章把 User-Agent 从概念、结构、历史到现代演进和实战用法一次讲透。 一、User-Agent 是什么">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sunky-zhou.cn/img/3.jpg">
+<meta property="article:published_time" content="2026-08-12T19:46:13.000Z">
+<meta property="article:modified_time" content="2026-08-12T19:47:41.640Z">
+<meta property="article:author" content="Sunky-zhou">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="浏览器">
+<meta property="article:tag" content="HTTP">
+<meta property="article:tag" content="User-Agent">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sunky-zhou.cn/img/3.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "浏览器的 User-Agent 到底是什么？一篇讲透用户代理",
+  "url": "https://sunky-zhou.cn/2026/08/13/user-agent/",
+  "image": "https://sunky-zhou.cn/img/3.jpg",
+  "datePublished": "2026-08-12T19:46:13.000Z",
+  "dateModified": "2026-08-12T19:47:41.640Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Sunky-zhou",
+      "url": "https://sunky-zhou.cn/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/zzh.jpg"><link rel="canonical" href="https://sunky-zhou.cn/2026/08/13/user-agent/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '浏览器的 User-Agent 到底是什么？一篇讲透用户代理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/custom/nav.css"><link rel="stylesheet" href="/custom/layout.css"><link rel="stylesheet" href="/custom/background.css"><link rel="stylesheet" href="/custom/home.css"><link rel="stylesheet" href="/custom/post.css"><link rel="stylesheet" href="/custom/reward.css"><link rel="stylesheet" href="/custom/about.css"><link rel="stylesheet" href="/custom/career.css"><link rel="stylesheet" href="/custom/careers.css"><link rel="stylesheet" href="/custom/genshinimpact.css"><link rel="stylesheet" href="/custom/hello-about.css"><link rel="stylesheet" href="/custom/skills.css"><link rel="stylesheet" href="/custom/site.css"><link rel="stylesheet" href="/custom/universe.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/zzh.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span> 项目</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/3.jpg);"><nav id="nav"><div id="nav-group"><span id="blog-info"><div class="back-home-button"><i class="back-home-button-icon fas fa-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">简介</div><div class="back-menu-list"><a class="back-menu-item" href="/about/" title="关于我"><img class="back-menu-item-icon" alt="关于我"><span class="back-menu-item-text">关于我</span></a><a class="back-menu-item" href="/cv/" title="CV"><img class="back-menu-item-icon" alt="CV"><span class="back-menu-item-text">CV</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">内容</div><div class="back-menu-list"><a class="back-menu-item" href="/" title="文章"><img class="back-menu-item-icon" alt="文章"><span class="back-menu-item-text">文章</span></a><a class="back-menu-item" href="/archives/" title="归档"><img class="back-menu-item-icon" alt="归档"><span class="back-menu-item-text">归档</span></a><a class="back-menu-item" href="/projects/" title="项目"><img class="back-menu-item-icon" alt="项目"><span class="back-menu-item-text">项目</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">记录</div><div class="back-menu-list"><a class="back-menu-item" href="/cicd/" title="CI/CD"><img class="back-menu-item-icon" alt="CI/CD"><span class="back-menu-item-text">CI/CD</span></a><a class="back-menu-item" href="/css/" title="CSS技巧"><img class="back-menu-item-icon" alt="CSS技巧"><span class="back-menu-item-text">CSS技巧</span></a><a class="back-menu-item" href="/js/" title="JS技巧"><img class="back-menu-item-icon" alt="JS技巧"><span class="back-menu-item-text">JS技巧</span></a><a class="back-menu-item" href="/components/" title="自定义组件"><img class="back-menu-item-icon" alt="自定义组件"><span class="back-menu-item-text">自定义组件</span></a></div></div></div></div><a id="blog-info-main" href="/" title="HELIOSKY"><span class="site-name">HELIOSKY</span><i class="fa-solid fa-house"></i></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span> 项目</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div><div id="nav-right"><!-- 音乐播放器--><a class="site-page" id="music-button" href="javascript:void(0)" title="音乐播放器"><i class="fas fa-headphones"></i></a><!-- 收藏/关注--><a class="site-page" id="favorites-button" href="/favorites/" title="收藏"><i class="fas fa-star"></i></a><!-- 相册/图片--><a class="site-page" id="gallery-button" href="/gallery/" title="相册"><i class="fas fa-images"></i></a><!-- 搜索功能已禁用--><!-- if theme.search.use--><!--   #search-button--><!--     span.site-page.social-icon.search--><!--       i.fas.fa-search.fa-fw--><!-- 主题切换--><div class="site-page" id="darkmode-button" title="深色/浅色模式切换"><i class="fas fa-moon"></i></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></div></nav><div id="post-info"><h1 class="post-title">浏览器的 User-Agent 到底是什么？一篇讲透用户代理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-12T19:46:13.000Z" title="发表于 2026-08-13 03:46:13">2026-08-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-12T19:47:41.640Z" title="更新于 2026-08-13 03:47:41">2026-08-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>在上一篇讲 H5 唤端的文章里，我们多次用到”通过 UA 判断是否在微信环境”这样的判断。这个 UA，就是 User-Agent（用户代理）。它是前端识别运行环境、做兼容适配、埋点统计乃至风控反爬的基石。但它同时也是 Web 历史上最”混乱”的一个字段——充满了历史包袱、伪装与妥协。这篇文章把 User-Agent 从概念、结构、历史到现代演进和实战用法一次讲透。</p>
+<h2 id="一、User-Agent-是什么"><a href="#一、User-Agent-是什么" class="headerlink" title="一、User-Agent 是什么"></a>一、User-Agent 是什么</h2><p><strong>User-Agent，字面意思是”用户代理”，指代替用户去访问网络资源的软件本身。</strong> 广义上，浏览器、爬虫、命令行工具（curl、wget）、App 内的 WebView、甚至邮件客户端，都是”用户代理”。</p>
+<p>在 HTTP 协议里，<code>User-Agent</code> 是一个<strong>请求头（Request Header）</strong>。每当浏览器向服务器发起请求，都会在请求头里带上这样一行字符串，用来自报家门——告诉服务器”我是谁、我基于什么内核、跑在什么操作系统上”。</p>
+<p>一个典型的现代 Chrome UA 长这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36</span><br></pre></td></tr></table></figure>
+
+<p>在前端 JS 里，可以通过 <code>navigator.userAgent</code> 读到当前浏览器的这串字符串：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(navigator.<span class="property">userAgent</span>);</span><br><span class="line"><span class="comment">// &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ...&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>服务端（如 Node、Nginx 日志、后端框架）则从 HTTP 请求头里读取它。</p>
+<h2 id="二、为什么这串字符串如此混乱？——一段”军备竞赛”式的历史"><a href="#二、为什么这串字符串如此混乱？——一段”军备竞赛”式的历史" class="headerlink" title="二、为什么这串字符串如此混乱？——一段”军备竞赛”式的历史"></a>二、为什么这串字符串如此混乱？——一段”军备竞赛”式的历史</h2><p>第一眼看这串 UA，你一定会困惑：明明是 Chrome，为什么开头写着 <code>Mozilla</code>？还带着 <code>AppleWebKit</code>、<code>KHTML</code>、<code>Gecko</code>、<code>Safari</code>？这不是自相矛盾吗？</p>
+<p>答案藏在一段近三十年的历史里，这是一场典型的”兼容性军备竞赛”。</p>
+<p><strong>最早</strong>，Mosaic 浏览器的 UA 是 <code>NCSA_Mosaic/2.0</code>。</p>
+<p><strong>Netscape</strong> 出现后，代号 Mozilla（Mosaic Killer），UA 写作 <code>Mozilla/1.0</code>。当时 Netscape 支持框架（frames）等新特性，很多网站便通过 UA 判断”是不是 Mozilla”，是才发送带框架的高级页面。</p>
+<p><strong>微软 IE</strong> 后来居上，也支持了框架。但网站的判断逻辑只认 <code>Mozilla</code>，IE 如果如实报自己是 <code>MSIE</code>，就会被网站当成低级浏览器，只收到简化页面。于是微软干脆在自己的 UA 里也塞进 <code>Mozilla</code>，伪装成兼容：<code>Mozilla/4.0 (compatible; MSIE ...)</code>。</p>
+<p><strong>从此，UA 造假成了行业默认玩法。</strong> 后来的每一个新浏览器，为了不被老网站的嗅探逻辑歧视，都会把前辈的标识”继承”进自己的 UA：</p>
+<ul>
+<li><strong>Firefox</strong> 用 Gecko 引擎，UA 里带 <code>Gecko</code> 和 <code>Mozilla</code>。</li>
+<li><strong>Safari</strong> 用 KHTML 衍生的 WebKit 引擎，为了兼容为 KHTML&#x2F;Gecko 写的网站，写成 <code>AppleWebKit ... (KHTML, like Gecko)</code>，同时保留 <code>Mozilla</code> 和 <code>Safari</code>。</li>
+<li><strong>Chrome</strong> 早期同样用 WebKit，为了兼容 Safari 生态，UA 里既有 <code>AppleWebKit</code> 又有 <code>Safari</code>，还加上自己的 <code>Chrome</code>；即便后来 Chrome 换成了自研的 Blink 引擎，为了不破坏无数网站的嗅探逻辑，仍然保留了 <code>AppleWebKit/537.36</code>。</li>
+<li><strong>Edge</strong>（Chromium 内核后）则在末尾追加 <code>Edg/xxx</code>。</li>
+</ul>
+<p>所以那串看似矛盾的 UA，其实是<strong>一层层”我兼容前辈”的声明叠加</strong>。理解了这段历史，就明白 UA 为什么不可能被简单解析——它天生就是为了”骗过”嗅探逻辑而设计的。</p>
+<h2 id="三、User-Agent-的结构拆解"><a href="#三、User-Agent-的结构拆解" class="headerlink" title="三、User-Agent 的结构拆解"></a>三、User-Agent 的结构拆解</h2><p>尽管混乱，现代浏览器 UA 大体遵循一个可拆解的结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mozilla/5.0 (平台/系统信息) 引擎标识 (引擎细节) 浏览器标识/版本 附加标识</span><br></pre></td></tr></table></figure>
+
+<p>以 Chrome 的 UA 为例逐段拆解：</p>
+<table>
+<thead>
+<tr>
+<th>片段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Mozilla/5.0</code></td>
+<td>历史遗留的”兼容令牌”，几乎所有浏览器都以此开头</td>
+</tr>
+<tr>
+<td><code>(Windows NT 10.0; Win64; x64)</code></td>
+<td>操作系统与架构信息（Windows 10、64 位）</td>
+</tr>
+<tr>
+<td><code>AppleWebKit/537.36</code></td>
+<td>渲染引擎标识（WebKit 版本）</td>
+</tr>
+<tr>
+<td><code>(KHTML, like Gecko)</code></td>
+<td>兼容声明，表示”像 Gecko 一样工作”</td>
+</tr>
+<tr>
+<td><code>Chrome/120.0.0.0</code></td>
+<td>真正的浏览器名称与版本</td>
+</tr>
+<tr>
+<td><code>Safari/537.36</code></td>
+<td>为兼容 Safari 生态保留的标识</td>
+</tr>
+</tbody></table>
+<p>移动端 UA 会额外带上设备信息，例如 iPhone 上的 Safari：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>iPhone; CPU iPhone OS 17_0</code> 标明了设备与 iOS 版本，<code>Mobile/15E148</code> 是移动端标识。</p>
+<p>而 App 内嵌 WebView 通常会在系统 UA 基础上追加自定义标识，这也是我们能识别微信、抖音等环境的关键：</p>
+<ul>
+<li>微信内置浏览器：末尾带 <code>MicroMessenger/8.x.x</code></li>
+<li>QQ 内置浏览器：带 <code>QQ/</code> 或 <code>MQQBrowser</code></li>
+<li>很多自家 App 会追加类似 <code>MyApp/3.2.1</code> 的自定义段</li>
+</ul>
+<h2 id="四、前端如何用-UA-做环境判断"><a href="#四、前端如何用-UA-做环境判断" class="headerlink" title="四、前端如何用 UA 做环境判断"></a>四、前端如何用 UA 做环境判断</h2><p>尽管 UA 不可靠（下文会讲），它至今仍是前端识别环境最常用、有时甚至是唯一的手段，尤其在无法用特性检测替代的场景（如识别具体是哪个 App 的 WebView）。</p>
+<p>常见判断的实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ua = navigator.<span class="property">userAgent</span>.<span class="title function_">toLowerCase</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 是否移动端</span></span><br><span class="line"><span class="keyword">const</span> isMobile = <span class="regexp">/mobile|android|iphone|ipad|ipod/</span>.<span class="title function_">test</span>(ua);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体系统</span></span><br><span class="line"><span class="keyword">const</span> isIOS = <span class="regexp">/iphone|ipad|ipod/</span>.<span class="title function_">test</span>(ua);</span><br><span class="line"><span class="keyword">const</span> isAndroid = <span class="regexp">/android/</span>.<span class="title function_">test</span>(ua);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 是否在微信内置浏览器</span></span><br><span class="line"><span class="keyword">const</span> isWeChat = <span class="regexp">/micromessenger/</span>.<span class="title function_">test</span>(ua);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 是否在 QQ 内</span></span><br><span class="line"><span class="keyword">const</span> isQQ = <span class="regexp">/\sqq\//</span>.<span class="title function_">test</span>(ua) || <span class="regexp">/mqqbrowser/</span>.<span class="title function_">test</span>(ua);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 提取 Android 系统版本</span></span><br><span class="line"><span class="keyword">const</span> androidVer = ua.<span class="title function_">match</span>(<span class="regexp">/android\s([\d.]+)/</span>)?.[<span class="number">1</span>];</span><br></pre></td></tr></table></figure>
+
+<p>回到唤端场景，前面提到的”微信里要引导用户到浏览器打开”，正是靠 <code>/micromessenger/.test(ua)</code> 这一句判断出来的。</p>
+<h2 id="五、UA-的核心问题：它不可信"><a href="#五、UA-的核心问题：它不可信" class="headerlink" title="五、UA 的核心问题：它不可信"></a>五、UA 的核心问题：它不可信</h2><p>用 UA 做判断，必须清醒地知道它有两个根本缺陷。</p>
+<p><strong>第一，UA 可以被任意伪造。</strong> 它只是一串请求头文本，浏览器的开发者工具、命令行工具、爬虫、自动化框架都能随意修改它。爬虫伪装成正常浏览器、开发者调试时切换设备，都是改 UA。所以<strong>任何依赖 UA 做安全判断（如风控、鉴权）的逻辑都是不可靠的</strong>，UA 只能作为辅助信号，不能作为唯一依据。</p>
+<p><strong>第二，UA 嗅探（UA Sniffing）容易过时和误判。</strong> 用正则匹配 UA 来判断浏览器能力，是一种脆弱的做法：新浏览器、新版本、新设备层出不穷，硬编码的判断逻辑很容易漏判或错判。历史上无数网站因为 UA 判断写死，导致新浏览器访问时被误当成”不支持”而降级——这正是当年各家浏览器不得不在 UA 里造假的根源。</p>
+<p><strong>因此业界的最佳实践是：能用特性检测（Feature Detection）就不要用 UA 嗅探。</strong> 判断浏览器是否支持某个能力，应该直接检测那个能力本身，而不是猜浏览器型号：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ 不好：靠 UA 猜能力</span></span><br><span class="line"><span class="keyword">if</span> (<span class="regexp">/chrome/</span>.<span class="title function_">test</span>(ua)) &#123; <span class="title function_">useWebGL</span>(); &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 更好：直接检测能力是否存在</span></span><br><span class="line"><span class="keyword">if</span> (<span class="string">&#x27;IntersectionObserver&#x27;</span> <span class="keyword">in</span> <span class="variable language_">window</span>) &#123;</span><br><span class="line">  <span class="comment">// 用这个 API</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 走 polyfill 或降级</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>UA 嗅探只应保留给那些<strong>特性检测无法覆盖</strong>的场景，比如识别”当前是不是微信 WebView””是不是某台特定机型”，这类信息没法通过检测某个 API 得到。</p>
+<h2 id="六、现代演进：Client-Hints-与-UA-的”去精细化”"><a href="#六、现代演进：Client-Hints-与-UA-的”去精细化”" class="headerlink" title="六、现代演进：Client Hints 与 UA 的”去精细化”"></a>六、现代演进：Client Hints 与 UA 的”去精细化”</h2><p>正因为 UA 又长、又乱、又不可靠，还携带了大量可用于指纹追踪（fingerprinting）的隐私信息，业界正在推动它的替代与瘦身。</p>
+<p><strong>User-Agent Client Hints（UA-CH）</strong> 是 Chrome 主导的新机制。核心思路是：不再把所有信息一股脑塞进一个 UA 字符串，而是拆成一组独立的、按需索取的请求头（如 <code>Sec-CH-UA</code>、<code>Sec-CH-UA-Platform</code>、<code>Sec-CH-UA-Mobile</code>），服务器需要哪部分信息就声明请求哪部分，浏览器默认只给出粗粒度信息（如品牌和大版本号），精确信息（如完整版本、机型）需显式请求。</p>
+<p>在 JS 侧对应的是 <code>navigator.userAgentData</code> API：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (navigator.<span class="property">userAgentData</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(navigator.<span class="property">userAgentData</span>.<span class="property">mobile</span>);    <span class="comment">// 是否移动端（布尔值）</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(navigator.<span class="property">userAgentData</span>.<span class="property">platform</span>);  <span class="comment">// &quot;Windows&quot; / &quot;Android&quot; 等</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(navigator.<span class="property">userAgentData</span>.<span class="property">brands</span>);    <span class="comment">// 品牌与版本数组</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 高熵值信息需异步、按需获取</span></span><br><span class="line">  navigator.<span class="property">userAgentData</span>.<span class="title function_">getHighEntropyValues</span>([</span><br><span class="line">    <span class="string">&#x27;platformVersion&#x27;</span>, <span class="string">&#x27;model&#x27;</span>, <span class="string">&#x27;fullVersionList&#x27;</span></span><br><span class="line">  ]).<span class="title function_">then</span>(<span class="function"><span class="params">info</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(info));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>与此配套，<strong>Chrome 正在推进”UA 缩减（User-Agent Reduction）”</strong>：逐步冻结和简化传统 <code>navigator.userAgent</code> 里的细节，比如把系统小版本、设备型号统一成固定占位值，减少可被用于追踪的信息量。这意味着未来直接从 UA 字符串里抠精确版本、机型会越来越不可靠，需要迁移到 Client Hints。</p>
+<p>需要注意的是，UA-CH 目前主要在 Chromium 系浏览器落地，Safari、Firefox 支持有限；而且它只在 https 下可用。所以现阶段仍是”传统 UA + Client Hints”并存的过渡期，做兼容适配时两者都要考虑。</p>
+<h2 id="七、实战建议小结"><a href="#七、实战建议小结" class="headerlink" title="七、实战建议小结"></a>七、实战建议小结</h2><p>把上面的内容落到实处，用 UA 时可以遵循几条原则：</p>
+<p><strong>优先特性检测，UA 嗅探作为补充。</strong> 判断”能不能用某个能力”时用特性检测；只有判断”运行在哪个具体环境&#x2F;App里”这类信息，才用 UA。</p>
+<p><strong>不要用 UA 做安全决策。</strong> 风控、鉴权、防刷不能只信 UA，它太容易伪造，只能作为多信号中的一个弱信号。</p>
+<p><strong>UA 解析交给成熟库。</strong> 自己写正则解析 UA 极易出错且难维护，服务端可用 ua-parser-js 这类库，它们持续跟进新设备和浏览器。</p>
+<p><strong>为 Client Hints 做准备。</strong> 新项目在需要环境信息时，优先考虑 <code>navigator.userAgentData</code>，并在服务端准备好读取 <code>Sec-CH-UA-*</code> 请求头，同时保留传统 UA 作为不支持环境的兜底。</p>
+<p><strong>移动端与 WebView 场景重点关注自定义标识。</strong> 微信、QQ、自家 App 的 WebView 识别，是国内业务里 UA 判断最不可替代的用途，把这些标识的匹配规则维护清楚，并做好兼容降级。</p>
+<hr>
+<p>User-Agent 是 Web 世界里一个典型的”历史包袱”：它诞生于善意（自报身份以做适配），却在浏览器间的兼容竞赛中变得冗长、矛盾、不可信。理解它的结构和历史，能帮你在需要时正确地使用它；而认清它的局限，则能帮你避免把关键逻辑建立在这根并不牢靠的柱子上。面向未来，特性检测与 Client Hints 才是更可靠的方向，UA 字符串则会慢慢退居为一个逐渐瘦身的兼容遗产。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://sunky-zhou.cn">Sunky-zhou</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://sunky-zhou.cn/2026/08/13/user-agent/">https://sunky-zhou.cn/2026/08/13/user-agent/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://sunky-zhou.cn" target="_blank">HELIOSKY</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%89%8D%E7%AB%AF/">前端</a><a class="post-meta__tags" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/">浏览器</a><a class="post-meta__tags" href="/tags/HTTP/">HTTP</a><a class="post-meta__tags" href="/tags/User-Agent/">User-Agent</a></div><div class="post-share"><div class="social-share" data-image="/img/3.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/08/13/h5-launch-app/" title="H5 唤起未启动的客户端：Hybrid 唤端方案全解析"><img class="cover" src="/img/2.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">H5 唤起未启动的客户端：Hybrid 唤端方案全解析</div></div><div class="info-2"><div class="info-item-1">在 Hybrid 开发中，有一类需求几乎绕不开：用户正在移动端浏览器里访问一个 H5 页面，我们希望把他”引流”回自家的 Native 客户端——可能是打开 App 首页，也可能是直达某个商品详情、活动页。而最棘手的情况恰恰是客户端此刻并未运行（进程未启动，甚至可能压根没安装）。这篇文章把整套唤端方案从原理、手段、检测、降级到踩坑一次讲透。 一、先厘清问题的本质H5 唤起客户端，本质上是浏览器发起对操作系统注册的某个”标识”的调用，操作系统查表匹配到已安装的 App，然后把它拉起来。这个”标识”可以是自定义协议（URL Scheme），也可以是一个特殊的 https 域名（Universal Link &#x2F; App Link）。 理解这一点很重要，因为它解释了后续所有复杂度的来源： 第一，JS 无法直接得知唤起是否成功。浏览器出于安全和隐私考虑，不会告诉网页”你刚才那次跳转把用户带走了没有”，否则网页就能探测用户装了哪些 App。所以我们只能靠”侧面观察”来推断结果。 第二，“客户端未启动”和”客户端未安装”是两种需要区分的状态。前者只要唤起成功，系统会冷启动...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/08/13/h5-launch-app/" title="H5 唤起未启动的客户端：Hybrid 唤端方案全解析"><img class="cover" src="/img/2.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-13</div><div class="info-item-2">H5 唤起未启动的客户端：Hybrid 唤端方案全解析</div></div><div class="info-2"><div class="info-item-1">在 Hybrid 开发中，有一类需求几乎绕不开：用户正在移动端浏览器里访问一个 H5 页面，我们希望把他”引流”回自家的 Native 客户端——可能是打开 App 首页，也可能是直达某个商品详情、活动页。而最棘手的情况恰恰是客户端此刻并未运行（进程未启动，甚至可能压根没安装）。这篇文章把整套唤端方案从原理、手段、检测、降级到踩坑一次讲透。 一、先厘清问题的本质H5 唤起客户端，本质上是浏览器发起对操作系统注册的某个”标识”的调用，操作系统查表匹配到已安装的 App，然后把它拉起来。这个”标识”可以是自定义协议（URL Scheme），也可以是一个特殊的 https 域名（Universal Link &#x2F; App Link）。 理解这一点很重要，因为它解释了后续所有复杂度的来源： 第一，JS 无法直接得知唤起是否成功。浏览器出于安全和隐私考虑，不会告诉网页”你刚才那次跳转把用户带走了没有”，否则网页就能探测用户装了哪些 App。所以我们只能靠”侧面观察”来推断结果。 第二，“客户端未启动”和”客户端未安装”是两种需要区分的状态。前者只要唤起成功，系统会冷启动...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/zzh.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Sunky-zhou</div><div class="author-info-description">zehao.zhou@sjtu.edu.cn</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cheliosky"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81User-Agent-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">一、User-Agent 是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B8%B2%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A6%82%E6%AD%A4%E6%B7%B7%E4%B9%B1%EF%BC%9F%E2%80%94%E2%80%94%E4%B8%80%E6%AE%B5%E2%80%9D%E5%86%9B%E5%A4%87%E7%AB%9E%E8%B5%9B%E2%80%9D%E5%BC%8F%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="toc-number">2.</span> <span class="toc-text">二、为什么这串字符串如此混乱？——一段”军备竞赛”式的历史</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81User-Agent-%E7%9A%84%E7%BB%93%E6%9E%84%E6%8B%86%E8%A7%A3"><span class="toc-number">3.</span> <span class="toc-text">三、User-Agent 的结构拆解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%89%8D%E7%AB%AF%E5%A6%82%E4%BD%95%E7%94%A8-UA-%E5%81%9A%E7%8E%AF%E5%A2%83%E5%88%A4%E6%96%AD"><span class="toc-number">4.</span> <span class="toc-text">四、前端如何用 UA 做环境判断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81UA-%E7%9A%84%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98%EF%BC%9A%E5%AE%83%E4%B8%8D%E5%8F%AF%E4%BF%A1"><span class="toc-number">5.</span> <span class="toc-text">五、UA 的核心问题：它不可信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E7%8E%B0%E4%BB%A3%E6%BC%94%E8%BF%9B%EF%BC%9AClient-Hints-%E4%B8%8E-UA-%E7%9A%84%E2%80%9D%E5%8E%BB%E7%B2%BE%E7%BB%86%E5%8C%96%E2%80%9D"><span class="toc-number">6.</span> <span class="toc-text">六、现代演进：Client Hints 与 UA 的”去精细化”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE%E5%B0%8F%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">七、实战建议小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/08/13/user-agent/" title="浏览器的 User-Agent 到底是什么？一篇讲透用户代理"><img src="/img/3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="浏览器的 User-Agent 到底是什么？一篇讲透用户代理"/></a><div class="content"><a class="title" href="/2026/08/13/user-agent/" title="浏览器的 User-Agent 到底是什么？一篇讲透用户代理">浏览器的 User-Agent 到底是什么？一篇讲透用户代理</a><time datetime="2026-08-12T19:46:13.000Z" title="发表于 2026-08-13 03:46:13">2026-08-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/13/h5-launch-app/" title="H5 唤起未启动的客户端：Hybrid 唤端方案全解析"><img src="/img/2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="H5 唤起未启动的客户端：Hybrid 唤端方案全解析"/></a><div class="content"><a class="title" href="/2026/08/13/h5-launch-app/" title="H5 唤起未启动的客户端：Hybrid 唤端方案全解析">H5 唤起未启动的客户端：Hybrid 唤端方案全解析</a><time datetime="2026-08-12T19:45:13.000Z" title="发表于 2026-08-13 03:45:13">2026-08-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/15/Mod/" title="前端工程化 | 命名空间与模块化"><img src="/img/6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前端工程化 | 命名空间与模块化"/></a><div class="content"><a class="title" href="/2025/07/15/Mod/" title="前端工程化 | 命名空间与模块化">前端工程化 | 命名空间与模块化</a><time datetime="2025-07-15T06:35:09.000Z" title="发表于 2025-07-15 14:35:09">2025-07-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/15/WebStorage/" title="Web 前端存储"><img src="/img/background.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Web 前端存储"/></a><div class="content"><a class="title" href="/2025/07/15/WebStorage/" title="Web 前端存储">Web 前端存储</a><time datetime="2025-07-15T06:35:09.000Z" title="发表于 2025-07-15 14:35:09">2025-07-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/02/development/" title="Promise 异步编程"><img src="/img/4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Promise 异步编程"/></a><div class="content"><a class="title" href="/2025/07/02/development/" title="Promise 异步编程">Promise 异步编程</a><time datetime="2025-07-01T16:46:11.000Z" title="发表于 2025-07-02 00:46:11">2025-07-02</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By Sunky-zhou</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script src="/js/nav-functions.js" defer></script><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false 
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
