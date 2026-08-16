@@ -312,3 +312,44 @@
 #page-header.nav-fixed #nav #blog-info > a:last-child {
     display: flex;
 }
+
+/* ============ 窄屏响应式修正 ============ */
+/* 背景：主题 main.js 的折叠算法(adjustMenu)只统计 #blog-info + #menus 宽度，
+   未计入魔改新增的 #nav-right 功能按钮，导致窄屏折叠时机失真、右侧图标溢出。
+   方案 A：折叠态/窄屏隐藏音乐·收藏·相册按钮，仅保留暗色切换，菜单交给汉堡键。 */
+/* nav.pug 中 #nav-right 原有一个重复 id 的 #toggle-menu(与 #menus 内的原生
+   汉堡重复，会在折叠时形成双汉堡)，已直接从 nav.pug 源头删除，此处无需再用
+   CSS 隐藏。 */
+
+/* 折叠态(主题判定为紧凑模式)：隐藏三个功能按钮，保留暗色切换 */
+#page-header #nav.hide-menu #nav-right #music-button,
+#page-header #nav.hide-menu #nav-right #favorites-button,
+#page-header #nav.hide-menu #nav-right #gallery-button {
+    display: none !important;
+}
+
+/* 折叠态汉堡居中修正：
+   #blog-info 带 flex:1 + overflow:hidden(主题 .limit-one-line)，会贪婪吃光
+   剩余空间，把 #menus(折叠汉堡)与 #nav-right 压到 0 宽甚至挤出可视区。
+   折叠态取消 #blog-info 的 flex 撑开(只占内容宽度)，用 margin-left:auto 把
+   汉堡连同右侧按钮整体推到最右侧；#nav-right 也收缩为内容宽度。 */
+#page-header #nav.hide-menu #blog-info {
+    flex: 0 0 auto;
+}
+
+#page-header #nav.hide-menu #menus {
+    margin-left: auto;
+}
+
+#page-header #nav.hide-menu #nav-right {
+    flex: 0 0 auto;
+}
+
+/* 窄屏兜底：覆盖折叠算法未计入 #nav-right 造成的中间宽度区间溢出 */
+@media screen and (max-width: 900px) {
+    #page-header #nav #nav-right #music-button,
+    #page-header #nav #nav-right #favorites-button,
+    #page-header #nav #nav-right #gallery-button {
+        display: none !important;
+    }
+}
